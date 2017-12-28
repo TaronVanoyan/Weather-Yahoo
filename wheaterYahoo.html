@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+    
+    <title>Weather</title>
+    <script src="https://fb.me/react-15.0.0.js"></script>
+    <script src="https://fb.me/react-dom-15.0.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  </head>
+  <body>
+    <div >
+        <input type="text" value="Yerevan" id="countName">
+        <p id="myDiv" style="display:inline-block"></p>
+    </div>
+
+    <div id="gag"></div>
+
+    <script type="text/babel">
+        var Greeting = React.createClass({
+            getTemp() {
+                var wheate = 'a';
+                var city = document.getElementById("countName").value;
+			    var searchtext = "select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "') and u='c'"
+                var config = {headers: {'Content-Type': 'application/json',}};
+
+                axios.get('https://query.yahooapis.com/v1/public/yql?q='+ searchtext + "&format=json",config)
+                .then( (response) => {
+                    this.wheate = response.data.query.results.channel.item.condition,
+                    console.log(this.wheate);
+                    document.getElementById('gag').innerHTML = "Forecast of today(" + this.wheate.date + ")" + "<br> City --- " + city + " <br> Temperature --- <mark>" + this.wheate.temp + " C°</mark><br>Forecast ---- "+ this.wheate.text;
+                })
+                .catch( (error) => {
+                    document.getElementById('gag').innerHTML = "Sorry,You are write incorrect <mark>Country name!</mark>"
+                    console.log(error);
+                }); 
+                return this.wheate 
+            },
+            render() {
+                console.log(this.getTemp());
+                return (
+                    <button onClick={this.getTemp}>Get weather</button>
+                )
+            }
+        });
+        ReactDOM.render(
+            <Greeting/>,
+            document.getElementById('myDiv'),
+        );
+    </script>
+  </body>
+</html>
