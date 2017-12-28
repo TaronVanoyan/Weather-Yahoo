@@ -1,2 +1,0 @@
-# Ararat_weather-
-asd
